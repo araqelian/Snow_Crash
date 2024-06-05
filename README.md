@@ -122,3 +122,7 @@ For the bonus part, you can complete the following list of levels:<br>
   <li>level13</li>
   <li>level14</li>
 </ul>
+<br><br>
+
+> [!NOTE]
+> For ISO file please write to my email: arakelyandaviid@gmail.com
