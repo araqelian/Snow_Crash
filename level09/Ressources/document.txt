@@ -1,0 +1,97 @@
+level09@SnowCrash:~$ ls -l
+total 12
+-rwsr-sr-x 1 flag09 level09 7640 Mar  5  2016 level09
+----r--r-- 1 flag09 level09   26 Mar  5  2016 token
+level09@SnowCrash:~$
+
+level09@SnowCrash:~$ cat token 
+f4kmm6p|=�p�n��DB�Du{��
+level09@SnowCrash:~$
+
+
+
+The 'token' looks like crypted and it does'nt work as password for flag09 user
+Let's try to understand how 'level09' executable work
+
+
+
+level09@SnowCrash:~$ ./level09 token 
+tpmhr
+level09@SnowCrash:~$ ./level09 a
+a
+level09@SnowCrash:~$ ./level09 aa
+ab
+level09@SnowCrash:~$ ./level09 aaa
+abc
+level09@SnowCrash:~$ ./level09 aaaa
+abcd
+level09@SnowCrash:~$ ./level09 aaaaa
+abcde
+level09@SnowCrash:~$
+
+
+
+It seems that 'level09' executable encrypt the string passed as argument by adding to each character its own index
+Let's try with our token
+
+
+
+level09@SnowCrash:~$ ./level09 'f4kmm6p|=�p�n��DB�Du{��'
+f5mpq;v�E���|���~����[��`������
+level09@SnowCrash:~$ 
+
+
+
+The token must be already crypted by 'level09', me should try to decrypt it
+
+
+
+level09@SnowCrash:~$ scp token <hostname>@<host ip>:<path>
+[...]
+<hostname>@<host ip>'s password: 
+token                                                                                                100%   26     0.0KB/s   00:00    
+level09@SnowCrash:~$ 
+
+
+
+(On a new terminal window (out of VM))
+
+
+
+<hostname>:<path>$ ls token
+token
+<hostname>:<path>$ chmod 644 token
+<hostname>:<path>$ hexdump -C token
+00000000  66 34 6b 6d 6d 36 70 7c  3d 82 7f 70 82 6e 83 82  |f4kmm6p|=..p.n..|
+00000010  44 42 83 44 75 7b 7f 8c  89 0a                    |DB.Du{....|
+0000001a
+<hostname>:<path>$ cat decrypt.py 
+token = [0x66, 0x34, 0x6b, 0x6d, 0x6d, 0x36, 0x70, 0x7c,  0x3d, 0x82, 0x7f, 0x70, 0x82, 0x6e, 0x83, 0x82, 0x44, 0x42, 0x83, 0x44, 0x75, 0x7b, 0x7f, 0x8c,  0x89]
+
+reverse_hash = ""
+
+for i in range(0, len(token)):
+	token[i] -= i
+	if token[i] < 0:
+		token[i] += 127
+	reverse_hash = reverse_hash + chr(token[i])
+
+print(reverse_hash)
+<hostname>:<path>$ python3 decrypt.py            
+f3iji1ju5yuevaus41q1afiuq
+<hostname>:<path>$
+
+
+
+(VM)
+
+
+
+level09@SnowCrash:~$ su flag09
+Password: f3iji1ju5yuevaus41q1afiuq
+Don't forget to launch getflag !
+flag09@SnowCrash:~$ getflag
+Check flag.Here is your token : s5cAJpM8ev6XHw998pRWG728z
+flag09@SnowCrash:~$ su level10
+Password: s5cAJpM8ev6XHw998pRWG728z
+level10@SnowCrash:~$ 

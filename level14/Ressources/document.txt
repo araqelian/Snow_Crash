@@ -1,0 +1,104 @@
+level14@SnowCrash:~$ ls -l
+total 0
+level14@SnowCrash:~$ find / -user flag14 2>/dev/null
+level14@SnowCrash:~$ cat /etc/passwd | grep flag14
+flag14:x:3014:3014::/home/flag/flag14:/bin/bash
+level14@SnowCrash:~$ 
+
+
+
+There are no executables to exploit, no files for us on the filesystem, we're only left with the getflag binary to reverse
+
+
+
+level14@SnowCrash:~$ gdb /bin/getflag
+[...]
+(gdb) disas main
+   [...]
+   0x08048989 <+67>:	call   0x8048540 <ptrace@plt>
+   0x0804898e <+72>:	test   %eax,%eax
+   [...]
+
+
+
+Me see that immediately after the 'ptrace' call, the value in register eax is tested. Me can set a breakpoint on that 'test', and display the registers content: me see that the value in eax is -1
+
+
+
+(gdb) b *main+72
+Breakpoint 1 at 0x804898e
+(gdb) r
+Starting program: /bin/getflag 
+
+Breakpoint 1, 0x0804898e in main ()
+(gdb) p $eax
+$1 = -1
+(gdb) 
+
+
+
+Me can therefore change the value in the register to 0, to bypass the error when calling 'ptrace'
+
+
+
+(gdb) set $eax=0
+(gdb) p $eax
+$2 = 0
+(gdb) c
+Continuing.
+Check flag.Here is your token :
+Nope there is no token here for you sorry. Try again :)
+(gdb)
+
+
+
+Me successfully bypassed the call to 'ptrace'! However, me are still identified as 'level14' instead of 'flag14'. If me look again at the disassembly code, me see that a check is made during a 'call' to 'getuid'
+
+
+
+(gdb) disas main
+Dump of assembler code for function main:
+   [...]
+   0x08048afd <+439>:	call   0x80484b0 <getuid@plt>
+   0x08048b02 <+444>:	mov    %eax,0x18(%esp)
+   0x08048b06 <+448>:	mov    0x18(%esp),%eax
+   0x08048b0a <+452>:	cmp    $0xbbe,%eax
+   [...]
+(gdb)
+
+
+
+Now me can run the executable again, repeat the first steps to bypass ptrace, and continue. If me want to pretend to be running the executable as 'flag14', me should change the value in the register from '2014' to '3014' (UID of flag14)
+
+
+
+(gdb) b *main+452
+Breakpoint 2 at 0x8048b0a
+(gdb) r
+Starting program: /bin/getflag 
+
+Breakpoint 1, 0x0804898e in main ()
+(gdb) p $eax
+$3 = -1
+(gdb) set $eax=0
+(gdb) p $eax
+$4 = 0
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048b0a in main ()
+(gdb) p $eax
+$5 = 2014
+(gdb) set $eax=3014
+(gdb) c
+Continuing.
+Check flag.Here is your token : 7QiHafiNa3HVozsaXkawuYrTstxbpABHD8CPnHJ
+[Inferior 1 (process 24618) exited normally]
+(gdb) 
+
+level14@SnowCrash:~$ su flag14
+Password: 7QiHafiNa3HVozsaXkawuYrTstxbpABHD8CPnHJ
+Congratulation. Type getflag to get the key and send it to me the owner of this livecd :)
+flag14@SnowCrash:~$ getflag
+Check flag.Here is your token : 7QiHafiNa3HVozsaXkawuYrTstxbpABHD8CPnHJ
+flag14@SnowCrash:~$ 

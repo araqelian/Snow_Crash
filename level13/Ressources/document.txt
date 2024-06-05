@@ -1,0 +1,69 @@
+level13@SnowCrash:~$ ls -l
+total 8
+-rwsr-sr-x 1 flag13 level13 7303 Aug 30  2015 level13
+level13@SnowCrash:~$
+
+level13@SnowCrash:~$ strings level13
+[...]
+0123456
+UID %d started us but we we expect %d
+boe]!ai0FB@.:|L6l@A?>qJ}I
+your token is %s
+[...]
+level13@SnowCrash:~$
+
+level13@SnowCrash:~$ nm -u level13 
+         [...]
+	 U exit@@GLIBC_2.0
+         U getuid@@GLIBC_2.0
+         U printf@@GLIBC_2.0
+         U strdup@@GLIBC_2.0
+level13@SnowCrash:~$
+
+level13@SnowCrash:~$ ./level13 
+UID 2013 started us but we we expect 4242
+level13@SnowCrash:~$ 
+
+
+
+Me need to set UID=4242 to get token
+Let's see what gdb tells us
+
+
+
+level13@SnowCrash:~$ gdb level13 
+[...]
+(gdb) disas main
+Dump of assembler code for function main:
+   [...]
+   0x08048595 <+9>:	call   0x8048380 <getuid@plt>
+   0x0804859a <+14>:	cmp    $0x1092,%eax
+   0x0804859f <+19>:	je     0x80485cb <main+63>
+   [...]
+End of assembler dump.
+(gdb) 
+
+
+
+If we set eax=4242 after the call to getuid we will jump straight to our token
+
+
+
+(gdb) b getuid
+Breakpoint 1 at 0x8048380
+(gdb) run
+	[...]
+(gdb) step
+	[...]
+(gdb) print $eax
+$1 = 2013
+(gdb) set $eax=4242
+(gdb) step
+	[...]
+your token is 2A31L79asukciNyi8uppkEuSx
+	[...]
+(gdb) 
+
+level13@SnowCrash:~$ su level14
+Password: 2A31L79asukciNyi8uppkEuSx
+level14@SnowCrash:~$

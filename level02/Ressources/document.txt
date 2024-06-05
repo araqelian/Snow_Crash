@@ -1,0 +1,43 @@
+level02@SnowCrash:~$ ls
+level02.pcap
+level02@SnowCrash:~$ 
+
+level02@SnowCrash:~$ scp level02.pcap <hostname>@<host ip>:<path>
+[...]
+<hostname>@<host ip>'s password: 
+level02.pcap                                                                                         100% 8302     8.1KB/s   00:00
+level02@SnowCrash:~$
+
+
+
+(On a new terminal window (out of VM))
+
+
+
+<hostname>:<path>$ ls
+level02.pcap                                                                                                                      
+<hostname>:<path>$ chmod 644 level02.pcap                                                                                 
+<hostname>:<path>$ wireshark level02.pcap
+
+
+
+In wireshark: Analyze --> Follow --> TCP Stream
+Password: ft_wandr...NDRel.L0L
+
+In ascii table <.> equivalent <DEL>
+ft_wandr...NDRel.L0L ---> ft_waNDReL0L
+
+
+
+(VM)
+
+
+
+level02@SnowCrash:~$ su flag02
+Password: ft_waNDReL0L
+Don't forget to launch getflag !
+flag02@SnowCrash:~$ getflag
+Check flag.Here is your token : kooda2puivaav1idi4f57q8iq
+flag02@SnowCrash:~$ su level03
+Password: kooda2puivaav1idi4f57q8iq
+level03@SnowCrash:~$ 
