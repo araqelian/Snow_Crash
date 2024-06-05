@@ -34,6 +34,10 @@ where you’ll have no margin for errors.
 </ul>
 <br>
 
+![](images/VM.jpg)
+
+<br>
+
 > [!TIP]
 > If the IP address is not visible, you will get it with the command <b>ifconfig</b> once you’re connected.
 
@@ -41,6 +45,11 @@ where you’ll have no margin for errors.
 <ul>
   <li>Then, you will be able to register using the following couple of login : level00, password : level00</li>
   <li>You really should use the SSH connection available on port 4242</li>
+</ul>
+
+![](images/ssh.png)
+
+<ul>
   <li>Once registered, you’re gonna have to find the password that will log you in with the "<b>flagXX</b>" account(XX = current level number)</li>
 </ul>
 <br>
@@ -50,6 +59,12 @@ where you’ll have no margin for errors.
 > you will have to find an alternative method, like a command injection on the program depending on its rights, for instance!)
 
 <br>
+<ul>
+  <li>Here is a session example:</li>
+</ul>
+
+![](images/example.jpg)
+
 <ul>
   <li>To help you with some levels, you’re gonna have to use external softwares. You should learn to use the <b>SCP</b> command</li>
 </ul>
